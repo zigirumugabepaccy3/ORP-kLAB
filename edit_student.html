@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Online Student Registration</title>
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="login.html">LOGIN</a>
+        <a href="index.html">Home</a>
+        <a href="view_students.html">View Students</a>
+        <a href="edit_student.html">Edit Student</a>
+        <a href="trash.html">Trash</a>
+    </div>
+    <div class="container">
+        <h1>Online Student Registration</h1>
+        <form id="editForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+
+            <label for="course">Course:</label>
+            <input type="text" id="course" required>
+
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const editForm = document.getElementById('editForm');
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const nameField = document.getElementById('name');
+            // Get the student index to edit (you can pass it as a query parameter)
+            const queryParams = new URLSearchParams(window.location.search);
+            const studentIndex = parseInt(queryParams.get('index'));
+
+            if (isNaN(studentIndex) || studentIndex < 0 || studentIndex >= students.length) {
+                // Handle invalid index
+                window.location.href = 'edit.html'; // Redirect to view students page
+                return;
+            }
+
+            const studentToEdit = students[studentIndex];
+
+
+
+            // Populate form fields with the student's data
+
+            // Populate form fields with the student's data
+            document.getElementById('name').value = studentToEdit.name;
+            document.getElementById('email').value = studentToEdit.email;
+            document.getElementById('course').value = studentToEdit.course;
+
+            editForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // Update student data in the students array
+                studentToEdit.name = document.getElementById('name').value;
+                studentToEdit.email = document.getElementById('email').value;
+                studentToEdit.course = document.getElementById('course').value;
+
+                // Save the updated array to localStorage
+                localStorage.setItem('students', JSON.stringify(students));
+
+                // Redirect to view students page
+                window.location.href = 'view_students.html';
+            });
+        });
+    </script>
+</body>
+
+</html>
